@@ -1,22 +1,24 @@
 {
-    "$schema": "https://typedoc.org/schema.json",
-    "name": "TypeDoc Example",
-    "entryPoints": ["./src"],
-    "sort": ["source-order"],
-    "media": "media",
-    "categorizeByGroup": false,
-    "searchCategoryBoosts": {
-        "Component": 2,
-        "Model": 1.2
-    },
-    "searchGroupBoosts": {
-        "Classes": 1.5
-    },
-    "navigationLinks": {
-        "Docs": "https://typedoc.org/guides/overview",
-        "GitHub": "https://github.com/TypeStrong/typedoc"
-    },
-    "sidebarLinks": {
-        "API": "https://typedoc.org/api"
-    }
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Don't Starve Together",
+  "basePath": "./",
+  "entryPoints": ["src/main.ts"],
+  "out": "docs",
+  "sort": ["source-order"],
+  "media": "assets",
+  "categorizeByGroup": false,
+  "searchCategoryBoosts": {
+    "Component": 2,
+    "Model": 1.2
+  },
+  "searchGroupBoosts": {
+    "Classes": 1.5
+  },
+  "navigationLinks": {
+    "home": "https://ddlife.github.io/",
+    "GitHub": "https://github.com/DDLife/DST-ts"
+  },
+  "sidebarLinks": {
+    "API": "https://typedoc.org/api"
+  }
 }

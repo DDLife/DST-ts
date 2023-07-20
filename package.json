@@ -4,7 +4,8 @@
   "description": "[TypeStrong/typedoc: Documentation generator for TypeScript projects.](https://github.com/TypeStrong/typedoc)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs": "npx typedoc"
   },
   "author": "",
   "license": "ISC",
