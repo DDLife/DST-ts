@@ -2,10 +2,13 @@
   "$schema": "https://typedoc.org/schema.json",
   "name": "Don't Starve Together",
   "basePath": "./",
-  "entryPoints": ["src/main.ts"],
+  "entryPoints": ["src/main.ts", "src/class.ts", "src/vector3.ts"],
   "out": "docs",
   "sort": ["source-order"],
   "media": "assets",
+  "gitRevision": "main",
+  "readme": "./README.md",
+  "hideGenerator": true,
   "categorizeByGroup": false,
   "searchCategoryBoosts": {
     "Component": 2,
@@ -19,6 +22,6 @@
     "GitHub": "https://github.com/DDLife/DST-ts"
   },
   "sidebarLinks": {
-    "API": "https://typedoc.org/api"
+    "preface": "https://ddlife.github.io/DST-ts/docs/index.html"
   }
 }

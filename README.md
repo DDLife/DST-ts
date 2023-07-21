@@ -6,6 +6,8 @@ the npm project is cloned from https://github.com/TypeStrong/typedoc/tree/master
 
 [Export Documentation · LuaLS/lua-language-server Wiki](https://github.com/LuaLS/lua-language-server/wiki/Export-Documentation) --> example: [computer](https://tweaked.cc/peripheral/computer.html)
 
+[git - html export different branch - Stack Overflow](https://stackoverflow.com/questions/9965884/html-export-different-branch)
+
 ## library
 
 - generate docs: [TypeStrong/typedoc: Documentation generator for TypeScript projects.](https://github.com/TypeStrong/typedoc)
