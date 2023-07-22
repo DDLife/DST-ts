@@ -2,9 +2,15 @@
   "$schema": "https://typedoc.org/schema.json",
   "name": "Don't Starve Together",
   "basePath": "./",
-  "entryPoints": ["src/main.ts", "src/class.ts", "src/vector3.ts"],
-  "out": "docs",
-  "sort": ["source-order"],
+  "entryPoints": [
+    "src/main.ts",
+    "src/class.ts",
+    "src/vector3.ts",
+    "src/behaviourtree.ts",
+    "src/strict.ts"
+  ],
+  "out": "docs/API",
+  "sort": ["alphabetical"],
   "media": "assets",
   "gitRevision": "main",
   "readme": "./README.md",

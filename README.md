@@ -6,7 +6,23 @@ the npm project is cloned from https://github.com/TypeStrong/typedoc/tree/master
 
 [Export Documentation · LuaLS/lua-language-server Wiki](https://github.com/LuaLS/lua-language-server/wiki/Export-Documentation) --> example: [computer](https://tweaked.cc/peripheral/computer.html)
 
+## repository struct
+
 [git - html export different branch - Stack Overflow](https://stackoverflow.com/questions/9965884/html-export-different-branch)
+
+```bash
+git submodule add -b gh-pages git@github.com:DDLife/DST-ts.git docs/
+```
+
+nothing happens
+
+```bash
+git submodule add -f -b gh-pages git@github.com:DDLife/DST-ts.git docs/
+```
+
+typedoc will overwrite the docs folder, so create the subfolder `docs/docs` to store the generated docs.
+
+the folder API expose the interface
 
 ## library
 

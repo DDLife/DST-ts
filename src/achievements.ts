@@ -3,7 +3,8 @@
  * Achievements have a name and an id object that contains a Steam id and a PSN id.
  * The ACHIEVEMENT function is a helper function that returns an Achievement object with the given id and name.
  * The Achievements array contains all the achievements in the game.
- * @module achievements
+ *
+ * @packageDocumentation
  */
 /*
 {
