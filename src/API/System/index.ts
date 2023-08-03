@@ -10,3 +10,4 @@
 export * from "./predefine";
 export * from "./global";
 export * from "./lua";
+export * from "./mainPredefine";

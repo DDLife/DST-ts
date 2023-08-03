@@ -1,5 +1,11 @@
 /**
- * Represents a 3D vector with x, y, and z components.
+ * This file defines a Vector3 class that represents a 3D vector with x, y, and z components.
+ *
+ * @packageDocumentation
+ */
+
+/**
+ * A 3D vector with x, y, and z components.
  */
 export class Vector3 {
   /**
@@ -67,7 +73,7 @@ export class Vector3 {
    * Returns the negation of this vector as a new Vector3 instance.
    * @returns A new Vector3 instance representing the negation of this vector.
    */
-  neg(): Vector3 {
+  unm(): Vector3 {
     return new Vector3(-this.x, -this.y, -this.z);
   }
 
@@ -76,7 +82,7 @@ export class Vector3 {
    * @param rhs - The vector to compute the dot product with.
    * @returns The dot product of this vector and the given vector.
    */
-  dot(rhs: Vector3): number {
+  Dot(rhs: Vector3): number {
     return this.x * rhs.x + this.y * rhs.y + this.z * rhs.z;
   }
 
@@ -85,7 +91,7 @@ export class Vector3 {
    * @param rhs - The vector to compute the cross product with.
    * @returns A new Vector3 instance representing the cross product of this vector and the given vector.
    */
-  cross(rhs: Vector3): Vector3 {
+  Cross(rhs: Vector3): Vector3 {
     return new Vector3(
       this.y * rhs.z - this.z * rhs.y,
       this.z * rhs.x - this.x * rhs.z,
@@ -115,7 +121,7 @@ export class Vector3 {
    * @param other - The vector to compute the distance to.
    * @returns The squared distance between this vector and the given vector.
    */
-  distSq(other: Vector3): number {
+  DistSq(other: Vector3): number {
     return (
       (this.x - other.x) ** 2 +
       (this.y - other.y) ** 2 +
@@ -128,15 +134,15 @@ export class Vector3 {
    * @param other - The vector to compute the distance to.
    * @returns The distance between this vector and the given vector.
    */
-  dist(other: Vector3): number {
-    return Math.sqrt(this.distSq(other));
+  Dist(other: Vector3): number {
+    return Math.sqrt(this.DistSq(other));
   }
 
   /**
    * Returns the squared length of this vector.
    * @returns The squared length of this vector.
    */
-  lengthSq(): number {
+  LengthSq(): number {
     return this.x ** 2 + this.y ** 2 + this.z ** 2;
   }
 
@@ -144,16 +150,16 @@ export class Vector3 {
    * Returns the length of this vector.
    * @returns The length of this vector.
    */
-  length(): number {
-    return Math.sqrt(this.lengthSq());
+  Length(): number {
+    return Math.sqrt(this.LengthSq());
   }
 
   /**
    * Normalizes this vector and returns it.
    * @returns This vector, after normalization.
    */
-  normalize(): Vector3 {
-    const len = this.length();
+  Normalize(): Vector3 {
+    const len = this.Length();
     if (len > 0) {
       this.x /= len;
       this.y /= len;
@@ -166,24 +172,24 @@ export class Vector3 {
    * Returns a new normalized Vector3 instance representing this vector.
    * @returns A new normalized Vector3 instance representing this vector.
    */
-  getNormalized(): Vector3 {
-    return this.divideScalar(this.length());
+  GetNormalized(): Vector3 {
+    return this.DivideScalar(this.Length());
   }
 
   /**
    * Returns a tuple containing a new normalized Vector3 instance representing this vector and its length.
    * @returns A tuple containing a new normalized Vector3 instance representing this vector and its length.
    */
-  getNormalizedAndLength(): [Vector3, number] {
-    const len = this.length();
-    return [len > 0 ? this.divideScalar(len) : this, len];
+  GetNormalizedAndLength(): [Vector3, number] {
+    const len = this.Length();
+    return [len > 0 ? this.DivideScalar(len) : this, len];
   }
 
   /**
    * Returns an array containing the x, y, and z components of this vector.
    * @returns An array containing the x, y, and z components of this vector.
    */
-  get(): [number, number, number] {
+  Get(): [number, number, number] {
     return [this.x, this.y, this.z];
   }
 
@@ -191,7 +197,7 @@ export class Vector3 {
    * Returns true if this object is an instance of Vector3, false otherwise.
    * @returns True if this object is an instance of Vector3, false otherwise.
    */
-  isVector3(): boolean {
+  IsVector3(): boolean {
     return true;
   }
 
@@ -201,7 +207,7 @@ export class Vector3 {
    * @param radius - The radius. Default is 1.
    * @returns A new Vector3 instance with the given polar coordinates.
    */
-  static fromTheta(theta: number, radius = 1): Vector3 {
+  static FromTheta(theta: number, radius = 1): Vector3 {
     return new Vector3(radius * Math.cos(theta), 0, -radius * Math.sin(theta));
   }
 
@@ -211,7 +217,7 @@ export class Vector3 {
    * @returns A new Vector3 instance representing the quotient of this vector and the given scalar.
    * @private
    */
-  private divideScalar(scalar: number): Vector3 {
+  private DivideScalar(scalar: number): Vector3 {
     return new Vector3(this.x / scalar, this.y / scalar, this.z / scalar);
   }
 }
@@ -223,7 +229,7 @@ export class Vector3 {
  * @param z - The z component of the vector. Default is 0.
  * @returns A new Vector3 instance representing the given object.
  */
-export function toVector3(
+export function ToVector3(
   obj: any,
   y?: number,
   z?: number
@@ -247,6 +253,6 @@ export function toVector3(
  * @param radius - The radius. Default is 1.
  * @returns A new Vector3 instance with the given polar coordinates.
  */
-export function vector3FromTheta(theta: number, radius = 1): Vector3 {
+export function Vector3FromTheta(theta: number, radius = 1): Vector3 {
   return new Vector3(radius * Math.cos(theta), 0, -radius * Math.sin(theta));
 }

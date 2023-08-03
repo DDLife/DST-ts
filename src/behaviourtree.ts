@@ -11,7 +11,7 @@
  */
 
 // TODO: find the real defination
-function getTime(): number {
+function GetTime(): number {
   return Date.now() / 1000;
 }
 
@@ -94,10 +94,10 @@ class BehaviorNode {
    * Applies a function to all parent nodes of the node.
    * @param fn The function to apply to the parent nodes.
    */
-  doToParents(fn: (node: BehaviorNode) => void): void {
+  DoToParents(fn: (node: BehaviorNode) => void): void {
     if (this.parent) {
       fn(this.parent);
-      this.parent.doToParents(fn);
+      this.parent.DoToParents(fn);
     }
   }
 
@@ -106,13 +106,13 @@ class BehaviorNode {
    * @param indent The indentation string to use.
    * @returns A string representation of the tree starting from the node.
    */
-  getTreeString(indent = ""): string {
-    let str = `${indent}${this.getString()}>${
-      this.getTreeSleepTime()?.toFixed(2) ?? "0.00"
+  GetTreeString(indent = ""): string {
+    let str = `${indent}${this.GetString()}>${
+      this.GetTreeSleepTime()?.toFixed(2) ?? "0.00"
     }\n`;
     if (this.children) {
       for (const child of this.children) {
-        str += child.getTreeString(`${indent}   >`);
+        str += child.GetTreeString(`${indent}   >`);
       }
     }
     return str;
@@ -122,7 +122,7 @@ class BehaviorNode {
    * Returns a string representation of the node for debugging purposes.
    * @returns A string representation of the node for debugging purposes.
    */
-  dbString(): string {
+  DBString(): string {
     return "";
   }
 
@@ -130,15 +130,15 @@ class BehaviorNode {
    * Sets the next update time of the node.
    * @param t The time to set.
    */
-  sleep(t: number): void {
-    this.nextUpdateTime = Date.now() + t;
+  Sleep(t: number): void {
+    this.nextUpdateTime = GetTime() + t;
   }
 
   /**
    * Returns the sleep time of the node.
    * @returns The sleep time of the node.
    */
-  getSleepTime(): number | null {
+  GetSleepTime(): number | null {
     if (
       this.status === BehaviorStatus.RUNNING &&
       !this.children &&
@@ -160,12 +160,12 @@ class BehaviorNode {
    * Returns the sleep time of the tree starting from the node.
    * @returns The sleep time of the tree starting from the node.
    */
-  getTreeSleepTime(): number | null {
+  GetTreeSleepTime(): number | null {
     let sleepTime = null;
     if (this.children) {
       for (const child of this.children) {
         if (child.status === BehaviorStatus.RUNNING) {
-          const t = child.getTreeSleepTime();
+          const t = child.GetTreeSleepTime();
           if (t !== null && (sleepTime === null || sleepTime > t)) {
             sleepTime = t;
           }
@@ -173,7 +173,7 @@ class BehaviorNode {
       }
     }
 
-    const mySleepTime = this.getSleepTime();
+    const mySleepTime = this.GetSleepTime();
     if (
       mySleepTime !== null &&
       (sleepTime === null || sleepTime > mySleepTime)
@@ -188,10 +188,10 @@ class BehaviorNode {
    * Returns a string representation of the node.
    * @returns A string representation of the node.
    */
-  getString(): string {
+  GetString(): string {
     let str = "";
     if (this.status === BehaviorStatus.RUNNING) {
-      str = this.dbString();
+      str = this.DBString();
     }
     return `${this.name} - ${this.status ?? "UNKNOWN"} <${
       this.lastResult ?? "?"
@@ -202,18 +202,18 @@ class BehaviorNode {
    * Visits the node.
    * @virtual
    */
-  visit(): void {
+  Visit(): void {
     this.status = BehaviorStatus.FAILED;
   }
 
   /**
    * Saves the status of the node.
    */
-  saveStatus(): void {
+  SaveStatus(): void {
     this.lastResult = this.status;
     if (this.children) {
       for (const child of this.children) {
-        child.saveStatus();
+        child.SaveStatus();
       }
     }
   }
@@ -222,12 +222,12 @@ class BehaviorNode {
    * Steps the node.
    * @virtual
    */
-  step(): void {
+  Step(): void {
     if (this.status !== BehaviorStatus.RUNNING) {
-      this.reset();
+      this.Reset();
     } else if (this.children) {
       for (const child of this.children) {
-        child.step();
+        child.Step();
       }
     }
   }
@@ -236,12 +236,12 @@ class BehaviorNode {
    * Resets the node.
    * @virtual
    */
-  reset(): void {
+  Reset(): void {
     if (this.status !== BehaviorStatus.READY) {
       this.status = BehaviorStatus.READY;
       if (this.children) {
         for (const child of this.children) {
-          child.reset();
+          child.Reset();
         }
       }
     }
@@ -250,10 +250,10 @@ class BehaviorNode {
   /**
    * Stops the node.
    */
-  stop(): void {
+  Stop(): void {
     if (this.children) {
       for (const child of this.children) {
-        child.stop();
+        child.Stop();
       }
     }
   }
@@ -291,43 +291,43 @@ class BT {
   /**
    * Forces an update of the behavior tree.
    */
-  forceUpdate(): void {
+  ForceUpdate(): void {
     this.forceupdate = true;
   }
 
   /**
    * Updates the behavior tree.
    */
-  update(): void {
-    this.root.visit();
-    this.root.saveStatus();
-    this.root.step();
+  Update(): void {
+    this.root.Visit();
+    this.root.SaveStatus();
+    this.root.Step();
     this.forceupdate = false;
   }
 
   /**
    * Resets the behavior tree.
    */
-  reset(): void {
-    this.root.reset();
+  Reset(): void {
+    this.root.Reset();
   }
 
   /**
    * Stops the behavior tree.
    */
-  stop(): void {
-    this.root.stop();
+  Stop(): void {
+    this.root.Stop();
   }
 
   /**
    * Gets the sleep time of the behavior tree.
    * @returns The sleep time of the behavior tree, or null if the behavior tree is not sleeping.
    */
-  getSleepTime(): number | null {
+  GetSleepTime(): number | null {
     if (this.forceupdate) {
       return 0;
     }
-    return this.root.getTreeSleepTime();
+    return this.root.GetTreeSleepTime();
   }
 
   /**
@@ -335,7 +335,7 @@ class BT {
    * @returns A string representation of the behavior tree.
    */
   toString(): string {
-    return this.root.getTreeString();
+    return this.root.GetTreeString();
   }
 }
 
@@ -353,7 +353,7 @@ class ConditionNode extends BehaviorNode {
     this.fn = fn;
   }
 
-  visit(): void {
+  Visit(): void {
     if (this.fn()) {
       this.status = BehaviorStatus.SUCCESS;
     } else {
@@ -378,7 +378,7 @@ class MultiConditionNode extends BehaviorNode {
     this.running = false;
   }
 
-  visit(): void {
+  Visit(): void {
     if (!this.running) {
       this.running = this.start();
     } else {
@@ -401,7 +401,7 @@ class ConditionWaitNode extends BehaviorNode {
     this.fn = fn;
   }
 
-  visit(): void {
+  Visit(): void {
     if (this.fn()) {
       this.status = BehaviorStatus.SUCCESS;
     } else {
@@ -418,7 +418,7 @@ class ActionNode extends BehaviorNode {
     this.action = action;
   }
 
-  visit(): void {
+  Visit(): void {
     this.action();
     this.status = BehaviorStatus.SUCCESS;
   }
@@ -434,12 +434,12 @@ class WaitNode extends BehaviorNode {
     this.wakeTime = 0;
   }
 
-  dbString(): string {
+  DBString(): string {
     const w = this.wakeTime - Date.now();
     return w.toFixed(2);
   }
 
-  visit(): void {
+  Visit(): void {
     const currentTime = Date.now();
 
     if (this.status !== BehaviorStatus.RUNNING) {
@@ -451,7 +451,7 @@ class WaitNode extends BehaviorNode {
       if (currentTime >= this.wakeTime) {
         this.status = BehaviorStatus.SUCCESS;
       } else {
-        this.sleep(currentTime - this.wakeTime);
+        this.Sleep(currentTime - this.wakeTime);
       }
     }
   }
@@ -465,16 +465,16 @@ class SequenceNode extends BehaviorNode {
     this.idx = 1;
   }
 
-  dbString(): string {
+  DBString(): string {
     return this.idx.toString();
   }
 
-  reset(): void {
-    super.reset();
+  Reset(): void {
+    super.Reset();
     this.idx = 1;
   }
 
-  visit(): void {
+  Visit(): void {
     if (this.status !== BehaviorStatus.RUNNING) {
       this.idx = 1;
     }
@@ -482,7 +482,7 @@ class SequenceNode extends BehaviorNode {
     let done = false;
     while (this.idx <= this.children.length) {
       const child = this.children[this.idx - 1];
-      child.visit();
+      child.Visit();
       if (
         child.status === BehaviorStatus.RUNNING ||
         child.status === BehaviorStatus.FAILED
@@ -506,16 +506,16 @@ class SelectorNode extends BehaviorNode {
     this.idx = 1;
   }
 
-  dbString(): string {
+  DBString(): string {
     return this.idx.toString();
   }
 
-  reset(): void {
-    super.reset();
+  Reset(): void {
+    super.Reset();
     this.idx = 1;
   }
 
-  visit(): void {
+  Visit(): void {
     if (this.status !== BehaviorStatus.RUNNING) {
       this.idx = 1;
     }
@@ -523,7 +523,7 @@ class SelectorNode extends BehaviorNode {
     let done = false;
     while (this.idx <= this.children.length) {
       const child = this.children[this.idx - 1];
-      child.visit();
+      child.Visit();
       if (
         child.status === BehaviorStatus.RUNNING ||
         child.status === BehaviorStatus.SUCCESS
@@ -544,9 +544,9 @@ class NotDecorator extends DecoratorNode {
     super("Not", child);
   }
 
-  visit(): void {
+  Visit(): void {
     const child = this.children[0];
-    child.visit();
+    child.Visit();
     if (child.status === BehaviorStatus.SUCCESS) {
       this.status = BehaviorStatus.FAILED;
     } else if (child.status === BehaviorStatus.FAILED) {
@@ -562,9 +562,9 @@ class FailIfRunningDecorator extends DecoratorNode {
     super("FailIfRunning", child);
   }
 
-  visit(): void {
+  Visit(): void {
     const child = this.children[0];
-    child.visit();
+    child.Visit();
     if (child.status === BehaviorStatus.RUNNING) {
       this.status = BehaviorStatus.FAILED;
     } else {
@@ -578,9 +578,9 @@ class FailIfSuccessDecorator extends DecoratorNode {
     super("FailIfSuccess", child);
   }
 
-  visit(): void {
+  Visit(): void {
     const child = this.children[0];
-    child.visit();
+    child.Visit();
     if (child.status === BehaviorStatus.SUCCESS) {
       this.status = BehaviorStatus.FAILED;
     } else {
@@ -601,17 +601,17 @@ class LoopNode extends BehaviorNode {
     this.rep = 0;
   }
 
-  dbString(): string {
+  DBString(): string {
     return this.idx.toString();
   }
 
-  reset(): void {
-    super.reset();
+  Reset(): void {
+    super.Reset();
     this.idx = 1;
     this.rep = 0;
   }
 
-  visit(): void {
+  Visit(): void {
     if (this.status !== BehaviorStatus.RUNNING) {
       this.idx = 1;
       this.rep = 0;
@@ -620,7 +620,7 @@ class LoopNode extends BehaviorNode {
     let done = false;
     while (this.idx <= this.children.length) {
       const child = this.children[this.idx - 1];
-      child.visit();
+      child.Visit();
       if (
         child.status === BehaviorStatus.RUNNING ||
         child.status === BehaviorStatus.FAILED
@@ -643,7 +643,7 @@ class LoopNode extends BehaviorNode {
       this.status = BehaviorStatus.SUCCESS;
     } else {
       for (const child of this.children) {
-        child.reset();
+        child.Reset();
       }
     }
   }
@@ -657,12 +657,12 @@ class RandomNode extends BehaviorNode {
     this.idx = null;
   }
 
-  reset(): void {
-    super.reset();
+  Reset(): void {
+    super.Reset();
     this.idx = null;
   }
 
-  visit(): void {
+  Visit(): void {
     let done = false;
 
     if (this.status === BehaviorStatus.READY) {
@@ -671,7 +671,7 @@ class RandomNode extends BehaviorNode {
       const start = this.idx;
       while (true) {
         const child = this.children[this.idx];
-        child.visit();
+        child.Visit();
 
         if (child.status !== BehaviorStatus.FAILED) {
           this.status = child.status;
@@ -690,7 +690,7 @@ class RandomNode extends BehaviorNode {
       }
     } else {
       const child = this.children[this.idx!];
-      child.visit();
+      child.Visit();
       this.status = child.status;
     }
   }
@@ -713,7 +713,7 @@ class PriorityNode extends BehaviorNode {
     }
   }
 
-  getSleepTime(): number | null {
+  GetSleepTime(): number | null {
     if (this.status === BehaviorStatus.RUNNING) {
       if (!this.period) {
         return 0;
@@ -721,7 +721,7 @@ class PriorityNode extends BehaviorNode {
 
       let timeTo = 0;
       if (this.lasttime !== null) {
-        timeTo = this.lasttime + this.period - getTime();
+        timeTo = this.lasttime + this.period - GetTime();
         if (timeTo < 0) {
           timeTo = 0;
         }
@@ -735,10 +735,10 @@ class PriorityNode extends BehaviorNode {
     return null;
   }
 
-  dbString(): string {
+  DBString(): string {
     let timeTill = 0;
     if (this.period) {
-      timeTill = (this.lasttime || 0) + this.period - getTime();
+      timeTill = (this.lasttime || 0) + this.period - GetTime();
     }
 
     return `execute ${
@@ -746,13 +746,13 @@ class PriorityNode extends BehaviorNode {
     }, eval in ${timeTill.toFixed(2)}`;
   }
 
-  reset(): void {
-    super.reset();
+  Reset(): void {
+    super.Reset();
     this.idx = null;
   }
 
-  visit(): void {
-    const time = getTime();
+  Visit(): void {
+    const time = GetTime();
     const doEval =
       this.lasttime === null ||
       this.period === null ||
@@ -779,20 +779,20 @@ class PriorityNode extends BehaviorNode {
             child.status === BehaviorStatus.FAILED ||
             child.status === BehaviorStatus.SUCCESS
           ) {
-            child.reset();
+            child.Reset();
           }
-          child.visit();
+          child.Visit();
           const cs = child.status;
           if (cs === BehaviorStatus.SUCCESS || cs === BehaviorStatus.RUNNING) {
             if (shouldTestAnyway && this.idx !== idx) {
-              this.children[this.idx!].reset();
+              this.children[this.idx!].Reset();
             }
             this.status = cs;
             found = true;
             this.idx = idx;
           }
         } else {
-          child.reset();
+          child.Reset();
         }
       }
       if (!found) {
@@ -802,7 +802,7 @@ class PriorityNode extends BehaviorNode {
       if (this.idx !== null) {
         const child = this.children[this.idx];
         if (child.status === BehaviorStatus.RUNNING) {
-          child.visit();
+          child.Visit();
           this.status = child.status;
           if (this.status !== BehaviorStatus.RUNNING) {
             this.lasttime = null;
@@ -821,31 +821,31 @@ class ParallelNode extends BehaviorNode {
     this.stopOnAnyComplete = false;
   }
 
-  step(): void {
+  Step(): void {
     if (this.status !== BehaviorStatus.RUNNING) {
-      this.reset();
+      this.Reset();
     } else if (this.children) {
       for (const child of this.children) {
         if (
           child.status === BehaviorStatus.SUCCESS &&
           child instanceof ConditionNode
         ) {
-          child.reset();
+          child.Reset();
         }
       }
     }
   }
 
-  visit(): void {
+  Visit(): void {
     let done = true;
     let anyDone = false;
     for (const [idx, child] of this.children.entries()) {
       if (child instanceof ConditionNode) {
-        child.reset();
+        child.Reset();
       }
 
       if (child.status !== BehaviorStatus.SUCCESS) {
-        child.visit();
+        child.Visit();
         if (child.status === BehaviorStatus.FAILED) {
           this.status = BehaviorStatus.FAILED;
           return;
@@ -907,31 +907,31 @@ class EventNode extends BehaviorNode {
 
   onEvent(data: any): void {
     if (this.status === BehaviorStatus.RUNNING) {
-      this.children[0].reset();
+      this.children[0].Reset();
     }
     this.triggered = true;
     this.data = data;
     if (this.inst.brain) {
       this.inst.brain.forceUpdate();
     }
-    this.doToParents((node: BehaviorNode) => {
+    this.DoToParents((node: BehaviorNode) => {
       if (node instanceof PriorityNode) {
         node.lasttime = null;
       }
     });
   }
 
-  step(): void {
-    super.step();
+  Step(): void {
+    super.Step();
     this.triggered = false;
   }
 
-  reset(): void {
-    super.reset();
+  Reset(): void {
+    super.Reset();
     this.triggered = false;
   }
 
-  visit(): void {
+  Visit(): void {
     if (this.status === BehaviorStatus.READY && this.triggered) {
       this.status = BehaviorStatus.RUNNING;
     }
@@ -939,7 +939,7 @@ class EventNode extends BehaviorNode {
     if (this.status === BehaviorStatus.RUNNING) {
       if (this.children && this.children.length === 1) {
         const child = this.children[0];
-        child.visit();
+        child.Visit();
         this.status = child.status;
       } else {
         this.status = BehaviorStatus.FAILED;
@@ -994,19 +994,19 @@ class LatchNode extends BehaviorNode {
     this.lastlatchtime = -Infinity;
   }
 
-  visit(): void {
+  Visit(): void {
     if (this.status === BehaviorStatus.READY) {
-      if (getTime() > this.currentlatchduration + this.lastlatchtime) {
+      if (GetTime() > this.currentlatchduration + this.lastlatchtime) {
         console.log(
           "GONNA GO!",
-          getTime(),
+          GetTime(),
           this.currentlatchduration,
           "----",
-          getTime() + this.currentlatchduration,
+          GetTime() + this.currentlatchduration,
           ">",
           this.lastlatchtime
         );
-        this.lastlatchtime = getTime();
+        this.lastlatchtime = GetTime();
         this.currentlatchduration =
           typeof this.latchduration === "function"
             ? this.latchduration()
@@ -1019,7 +1019,7 @@ class LatchNode extends BehaviorNode {
     }
 
     if (this.status === BehaviorStatus.RUNNING) {
-      this.children[0].visit();
+      this.children[0].Visit();
       this.status = this.children[0].status;
     }
   }

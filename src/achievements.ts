@@ -24,10 +24,20 @@ interface Achievement {
   };
 }
 
+/**
+ * A helper function that returns an Achievement object with the given id and name.
+ *
+ * @param id - The id of the achievement.
+ * @param name - The name of the achievement.
+ * @returns The Achievement object.
+ */
 function ACHIEVEMENT(id: string, name: string): Achievement {
   return { name, id: { steam: `${id}_${name}`, psn: id } };
 }
 
+/**
+ * An array of Achievement objects, containing all the achievements in the game.
+ */
 const Achievements: Achievement[] = [
   ACHIEVEMENT("1", "survive_20"),
   ACHIEVEMENT("2", "survive_35"),

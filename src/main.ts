@@ -7,11 +7,8 @@ import {
   Package,
   MODS_ROOT,
   kleiloadlua,
+  TheMixer,
 } from "API/System";
-import "strict";
-import { AddPrintLogger } from "debugprint";
-import "config";
-import "vector3";
 
 // Override the Package.path in luaconf.h because it is impossible to find
 Package.path = "scripts\\?.lua;scriptlibs\\?.lua";
@@ -19,27 +16,6 @@ Package.assetpath = [];
 Package.assetpath.push({ path: "" });
 
 Math.random();
-
-const MAIN: number = 1;
-const ENCODE_SAVES: boolean = BRANCH !== "dev";
-const CHEATS_ENABLED: boolean = CONFIGURATION !== "PRODUCTION";
-const CAN_USE_DBUI: boolean = CHEATS_ENABLED && PLATFORM === "WIN32_STEAM";
-const SOUNDDEBUG_ENABLED: boolean = false;
-const SOUNDDEBUGUI_ENABLED: boolean = false;
-const WORLDSTATEDEBUG_ENABLED: boolean = false;
-const DEBUG_MENU_ENABLED: boolean =
-  BRANCH === "dev" || (IsConsole() && CONFIGURATION !== "PRODUCTION");
-const METRICS_ENABLED: boolean = true;
-const TESTING_NETWORK: number = 1;
-const AUTOSPAWN_MASTER_SECONDARY: boolean = false;
-const DEBUGRENDER_ENABLED: boolean = true;
-const SHOWLOG_ENABLED: boolean = true;
-const POT_GENERATION: boolean = false;
-
-// Networking related configuration
-const DEFAULT_JOIN_IP: string = "127.0.0.1";
-const DISABLE_MOD_WARNING: boolean = false;
-const DEFAULT_SERVER_SAVE_FILE: string = "/server_save";
 
 let RELOADING: boolean = false;
 let ExecutingLongUpdate: boolean = false;
@@ -118,5 +94,112 @@ if (TheSim) {
     return loadfn(filename);
   };
 }
+
+import "strict";
+import { AddPrintLogger } from "debugprint";
 // add our print loggers
 AddPrintLogger((...args: any[]) => TheSim.LuaPrint(...args));
+
+import "config";
+import "vector3";
+import "mainfunctions";
+import "preloadsounds";
+
+import "mods";
+import "json";
+import "tuning";
+
+import ProfileClass from "playerprofile";
+let Profile = ProfileClass(); // profile needs to be loaded before language
+Profile.Load(null, true); // true to indicate minimal load required for language.lua to read the profile.
+import LOC from "languages/loc";
+import "languages/language";
+import "strings";
+
+//Apply a baseline set of translations so that lua in the boot flow can access the correct strings, after the mods are loaded, main.lua will run this again
+//Ideally we wouldn't need to do this, but stuff like maps/levels/forest loads in the boot flow and it caches strings before they've been translated.
+//Doing an early translate here is less risky than changing all the cases of early string access. Downside is that it doesn't address the issue for mod transations.
+
+TranslateStringTable(STRINGS);
+
+import "./stringutil";
+import "./dlcsupport_strings";
+import "./constants";
+import "./class";
+import "./util";
+import "./vecutil";
+import "./vec3util";
+import "./datagrid";
+import "./ocean_util";
+import "./actions";
+import "./debugtools";
+import "./simutil";
+import "./scheduler";
+import "./stategraph";
+import "./behaviourtree";
+import "./prefabs";
+import "./tiledefs";
+import "./tilegroups";
+import "./falloffdefs";
+import "./groundcreepdefs";
+import "./prefabskin";
+import "./entityscript";
+import "./profiler";
+import "./recipes";
+import "./brain";
+import "./emitters";
+import "./dumper";
+import "./input";
+import "./upsell";
+import "./stats";
+import "./frontend";
+import "./netvars";
+import "./networking";
+import "./networkclientrpc";
+import "./shardnetworking";
+import "./fileutil";
+import "./prefablist";
+import "./standardcomponents";
+import "./update";
+import "./fonts";
+import "./physics";
+import "./modindex";
+import "./mathutil";
+import "./components/lootdropper";
+import "./reload";
+import "./saveindex"; // Added by Altgames for Android focus lost handling
+import "./shardsaveindex";
+import "./shardindex";
+import "./custompresets";
+import "./gamemodes";
+import "./skinsutils";
+import "./wxputils";
+import "./klump";
+import "./popupmanager";
+import "./chathistory";
+import "./componentutil";
+import "./skins_defs_data";
+
+if (TheConfig.IsEnabled("force_netbookmode")) {
+  TheSim.SetNetbookMode(true);
+}
+
+console.log("Running main.lua\n");
+
+TheSystemService.SetStalling(true);
+
+let VERBOSITY_LEVEL = VERBOSITY.ERROR;
+if (CONFIGURATION != "PRODUCTION") {
+  VERBOSITY_LEVEL = VERBOSITY.DEBUG;
+}
+
+// uncomment this line to override
+VERBOSITY_LEVEL = VERBOSITY.WARNING;
+
+// instantiate the mixer
+import Mixer from "mixer";
+TheMixer = Mixer.Mixer();
+import "mixes";
+TheMixer.PushMix("start");
+
+import Stats from "stats";

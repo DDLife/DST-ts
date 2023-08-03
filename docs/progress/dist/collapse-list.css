@@ -1,0 +1,57 @@
+/* (A) CONTAINER */
+.collapse,
+.collapse ul {
+  list-style-type: none;
+  padding-left: 10px;
+}
+
+/* (B) LIST ITEMS */
+.collapse li {
+  padding: 5px;
+}
+/* font green color*/
+.collapse .done {
+  color: #6a9955;
+}
+/* font red color*/
+.collapse .fail {
+  color: #ee4b4b;
+}
+
+/* font yellow color*/
+.collapse .pending {
+  color: #d7ba7d;
+}
+/* (C) TOGGLE */
+.toggle {
+  padding: 3px;
+  cursor: pointer;
+}
+.toggle::before {
+  display: inline-block;
+  width: 15px;
+  content: "+";
+}
+.toggle.show::before {
+  content: "-";
+}
+
+/* (D) SHOW/HIDE */
+.collapse ul {
+  display: none;
+}
+.toggle.show + ul {
+  display: block;
+}
+
+/* (X) NOT IMPORTANT */
+* {
+  font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
+}
+
+/* dark theme */
+body {
+  background-color: #1f1f1f;
+  color: #cccccc;
+}
